@@ -5,7 +5,11 @@ const classNames = require('classnames');
 
 export default function Button(props) {
    const {confirm, danger} = props;
-   const buttonClass = classNames({button: true, "button--confirm": {confirm}, "button--danger": {danger}})
+   const buttonClass = classNames({
+      button: true, 
+      "button--confirm": confirm, 
+      "button--danger": danger
+   })
   
 
    return (
