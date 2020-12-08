@@ -24,12 +24,12 @@ export default function InterviewerListItem(props) {
   <li 
     className={interviewerClasses}
     key={id}
-    onClick={()=> setInterviewer(name)}>
+    onClick={setInterviewer}>
     <img
       className={interviewerImgClasses}
       src={avatar}
       alt={name}
-    /> {selected ? name : ""}
+    /> {selected && name}
   </li>
   )
 };  
