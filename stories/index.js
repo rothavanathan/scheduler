@@ -155,4 +155,4 @@ storiesOf("DayList", module)
         onEdit={action("onEdit")}
         onDelete={action("onDelete")}
       />)
-      .add("Confirm", () => <Confirm />)      
+      .add("Confirm", () => <Confirm message="Delete the appointment?" onCancel={action("onCancel")} onConfirm={action("onConfirm")}/>)      
