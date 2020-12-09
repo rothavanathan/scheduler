@@ -63,12 +63,13 @@ export default function Application(props) {
     .then(results => {
       
       setDays(results.data)
-      console.log(days);
     })
     .catch(err => {
       console.log(err)
     })
   }, [])
+
+  
 
   const appointmentList = appointments.map((appointment, index) => {
     return <Appointment key={index} {...appointment}/>
