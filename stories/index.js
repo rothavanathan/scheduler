@@ -139,7 +139,14 @@ storiesOf("DayList", module)
           interviewer={3}
           setInterviewer={action("setInterviewer")}
         />
-      ));
+      ))
+      // .add("Select", () => (
+      //   <InterviewerList
+      //     interviewers={interviewers}
+      //     interviewer={3}
+      //     setInterviewer={action("setInterviewer")}
+      //   />
+      // ));
     
 
     //Appointment stories
@@ -161,6 +168,6 @@ storiesOf("DayList", module)
       .add("Confirm", () => <Confirm message="Delete the appointment?" onCancel={action("onCancel")} onConfirm={action("onConfirm")}/>)      
       .add("Status", () => <Status message="Saving"/>)
       .add("Error", () => <Error message="Could not delete appointment" onClose={action("onClose")}/>)
-      .add("Form Creating", () => <Form interviewers={interviewers} onSave={action("onSave")} onCancel={action("onCancel")} onChange={action("onChange")}/>)
-      .add("Form Editing", () => <Form name="Lydia Miller-Jones" interviewers={interviewers} interviewer="2" onSave={action("onSave")} onCancel={action("onCancel")} onChange={action("onChange")}/>)
+      .add("Form Creating", () => <Form interviewers={interviewers} onSave={action("onSave")} onCancel={action("onCancel")}/>)
+      .add("Form Editing", () => <Form name="Lydia Miller-Jones" interviewers={interviewers} interviewer={2} onSave={action("onSave")} onCancel={action("onCancel")}/>)
 
