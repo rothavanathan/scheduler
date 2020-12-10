@@ -5,30 +5,21 @@ import axios from "axios";
 import DayList from "./DayList.js";
 import Appointment from "./Appointment";
 import "components/Application.scss";
-import { getAppointmentsForDay } from "../helpers/selectors"
+import { getAppointmentsForDay, getInterview } from "../helpers/selectors"
 
 
 export default function Application(props) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    appointments: {}
+    appointments: {},
+    interviewers: {}
   })
   
   const setDay = day => setState(prev => (
       { ...prev, day }
     )
   );
-  
-  // const setDays = days => setState(prev => (
-  //     { ...prev, days }
-  //   )
-  // );
-  
-  // const setAppointments = appointments => setState(prev => (
-  //     { ...prev, appointments }
-  //   )
-  // );
 
   const getDays = () => {
     return axios({
@@ -65,6 +56,7 @@ export default function Application(props) {
         return {
           ...prev,
           days: days.data,
+          interviewers: interviewers.data,
           appointments: appointments.data
         }
 
@@ -78,11 +70,18 @@ export default function Application(props) {
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
-  const appointmentList = dailyAppointments.map((appointment, index) => {
-    return <Appointment key={index} {...appointment}/>
+  const schedule = dailyAppointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+
+    return <Appointment 
+    key={appointment.id} 
+    id={appointment.id}
+    time={appointment.time}
+    interview={interview}
+    />
   })
   //tag on extra header to complete the wrapping of appointment blocks with time headers
-  appointmentList.push(<Appointment key="last" time="5pm" />)
+  schedule.push(<Appointment key="last" time="5pm" />)
 
   return (
     <main className="layout">
@@ -109,7 +108,7 @@ export default function Application(props) {
 
       </section>
       <section className="schedule">
-        {appointmentList}
+        {schedule}
       </section>
     </main>
   );
