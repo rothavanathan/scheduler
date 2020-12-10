@@ -8,50 +8,6 @@ import "components/Application.scss";
 import { getAppointmentsForDay } from "../helpers/selectors"
 
 
-// const appointments = [
-//   {
-//     id: 1,
-//     time: "12pm",
-//   },
-//   {
-//     id: 1,
-//     time: "1pm",
-//     interview: {
-//       student: "Guido van Rossum",
-//       interviewer: {
-//         id: 1,
-//         name: "Sylvia Palmer",
-//         avatar: "https://i.imgur.com/LpaY82x.png",
-//       }
-//     }
-//   },
-//   {
-//     id: 1,
-//     time: "2pm",
-//     interview: {
-//       student: "Ryan Dahl",
-//       interviewer: {
-//         id: 3,
-//         name: "Mildred Nazir",
-//         avatar: "https://i.imgur.com/T2WwVfS.png",
-//       }
-//     }
-//   },
-//   {
-//     id: 1,
-//     time: "4pm",
-//     interview: {
-//       student: "Dan Abramov",
-//       interviewer: {
-//         id: 5,
-//         name: "Sven Jones",
-//         avatar: "https://i.imgur.com/twYrpay.jpg",
-//       }
-//     }
-//   }
-// ];
-
-
 export default function Application(props) {
   const [state, setState] = useState({
     day: "Monday",
@@ -64,35 +20,69 @@ export default function Application(props) {
     )
   );
   
-  const setDays = days => setState(prev => (
-      { ...prev, days }
-    )
-  );
+  // const setDays = days => setState(prev => (
+  //     { ...prev, days }
+  //   )
+  // );
+  
+  // const setAppointments = appointments => setState(prev => (
+  //     { ...prev, appointments }
+  //   )
+  // );
 
-
-
-  useEffect(() => {
-    axios({
+  const getDays = () => {
+    return axios({
       url: `/api/days`,
       method: 'GET'
     })
-    .then(results => {
-      console.log(results.data)
-      setDays(results.data)
+  };
+
+  const getInterviewers = () => {
+    return axios({
+      url: `/api/interviewers`,
+      method: 'GET'
+    })
+  };
+
+  const getAppointments = () => {
+    return axios({
+      url: `/api/appointments`,
+      method: 'GET'
+    })
+  };
+
+
+  //promise all to get all resources
+  useEffect(() => {
+    Promise.all([
+      getDays(),
+      getInterviewers(),
+      getAppointments()
+    ])
+    .then(([days, interviewers, appointments]) => {
+      console.log(days.data, interviewers.data, appointments.data)
+      setState(prev => {
+        return {
+          ...prev,
+          days: days.data,
+          appointments: appointments.data
+        }
+
+      })
     })
     .catch(err => {
       console.log(err)
     })
   }, [])
 
-  const appointments = getAppointmentsForDay(state, state.day);
 
-  const appointmentList = appointments.map((appointment, index) => {
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+
+  const appointmentList = dailyAppointments.map((appointment, index) => {
     return <Appointment key={index} {...appointment}/>
   })
-
-  appointmentList.push(<Appointment key="last" time="5pm" />
-  )
+  //tag on extra header to complete the wrapping of appointment blocks with time headers
+  appointmentList.push(<Appointment key="last" time="5pm" />)
 
   return (
     <main className="layout">
