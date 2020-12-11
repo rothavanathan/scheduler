@@ -5,7 +5,7 @@ import axios from "axios";
 import DayList from "./DayList.js";
 import Appointment from "./Appointment";
 import "components/Application.scss";
-import { getAppointmentsForDay, getInterview } from "../helpers/selectors"
+import { getAppointmentsForDay, getInterviewersForDay, getInterview } from "../helpers/selectors"
 
 
 export default function Application(props) {
@@ -69,15 +69,18 @@ export default function Application(props) {
 
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
 
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
+    console.log(`interview is: `, interview)
 
     return <Appointment 
     key={appointment.id} 
     id={appointment.id}
     time={appointment.time}
     interview={interview}
+    interviewers={dailyInterviewers}
     />
   })
   //tag on extra header to complete the wrapping of appointment blocks with time headers
