@@ -14,6 +14,7 @@ export default function InterviewerList(props) {
   
   const results = interviewers.map(interviewerData => {
     return <InterviewerListItem 
+      key={interviewerData.id}
       name={interviewerData.name}
       avatar={interviewerData.avatar}
       setInterviewer={(event)=> {

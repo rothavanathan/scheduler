@@ -71,6 +71,26 @@ export default function Application(props) {
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   const dailyInterviewers = getInterviewersForDay(state, state.day);
 
+  function bookInterview(id, interview) {
+    
+    return axios
+      ({
+          method: "PUT",
+          url: `/api/appointments/${id}`,
+          data: {interview}
+      }).then(res => {
+        const appointment = {
+          ...state.appointments[id],
+          interview: { ...interview }
+        };
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment
+        };
+        setState(prev => ({...prev, appointments}));
+      }).catch(err => console.log(`There was an error submitting the appointment:`, err))
+  };
+
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
     console.log(`interview is: `, interview)
@@ -81,6 +101,7 @@ export default function Application(props) {
     time={appointment.time}
     interview={interview}
     interviewers={dailyInterviewers}
+    bookInterview={bookInterview}
     />
   })
   //tag on extra header to complete the wrapping of appointment blocks with time headers

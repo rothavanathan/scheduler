@@ -6,7 +6,7 @@ import Button from "../Button.js";
 
 export default function Form(props) {
   
-  const {interviewers, onSave, onCancel} = props;
+  const {interviewers, onSave, onCancel, bookInterview,} = props;
 
   // console.log(`onChange is: `, setInterviewer)
   const [name, setName] = useState(props.name || "");
