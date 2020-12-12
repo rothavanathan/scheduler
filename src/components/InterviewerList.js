@@ -5,12 +5,12 @@ import InterviewerListItem from "./InterviewerListItem";
 
 export default function InterviewerList(props) {
   const {interviewers, interviewer, setInterviewer} = props;
-
-  const switchInterviewer = () => {
-    setInterviewer(prev => {
-      console.log(`previous state was`, prev)
-    })
-  }
+  
+  // const switchInterviewer = () => {
+  //   setInterviewer(prev => {
+  //     console.log(`previous state was`, prev)
+  //   })
+  // }
   
   const results = interviewers.map(interviewerData => {
     return <InterviewerListItem 

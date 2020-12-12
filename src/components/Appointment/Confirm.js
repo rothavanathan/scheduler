@@ -3,7 +3,7 @@ import React from "react";
 import Button from "../Button.js";
 
 export default function Confirm(props) {
-  const {message, onConfirm, onCancel} = props;
+  const {onConfirm, onCancel} = props;
 
   return (
     <main className="appointment__card appointment__card--confirm">

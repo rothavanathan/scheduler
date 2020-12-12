@@ -41,23 +41,22 @@ export default function Appointment(props) {
     transition(EDIT)
   }
   
-  function deleteRequest(name, interviewer) {
-    const interview = {};
+  function deleteRequest() {
     transition(CONFIRM)
   }
 
-  function deleteInterview(name, interviewer) {
+  function deleteInterview() {
 
     transition(DELETING, true)
     cancelInterview(id)
-      .then(success => transition(EMPTY))
-      .catch(err => transition(ERROR, true))
+      .then(() => transition(EMPTY))
+      .catch(() => transition(ERROR, true))
   }
 
   return (
     <article className="appointment">
       <Header time={time} />
-      {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} bookInterview={bookInterview}/>}
+      {mode === EMPTY && <Empty onAdd={() => transition(CREATE)}/>}
 
       {mode === SHOW && ( <Show 
       student={interview.student} 
@@ -75,8 +74,7 @@ export default function Appointment(props) {
       {mode === SAVING && <Status message="Saving..."/>}
       {mode === DELETING && <Status message="Deleting..."/>}
       
-      {mode === CONFIRM && <Confirm 
-        message="Are you sure you want to delete?" 
+      {mode === CONFIRM && <Confirm
         onCancel={back}
         onConfirm={deleteInterview}
       />}
