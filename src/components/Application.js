@@ -88,10 +88,10 @@ export default function Application(props) {
           [id]: appointment
         };
         setState(prev => ({...prev, appointments}));
-      }).catch(err => console.log(`There was an error creating the appointment:`, err))
+      })
   };
 
-  function cancelInterview(id, interview) {
+  function cancelInterview(id) {
     return axios
       ({
         method: "DELETE",
@@ -107,7 +107,7 @@ export default function Application(props) {
           [id]: appointment
         };
         setState(prev => ({...prev, appointments}));
-      }).catch(err => console.log(`There was an error deleting the appointment:`, err))
+      })
   };
 
 

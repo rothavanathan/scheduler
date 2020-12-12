@@ -9,6 +9,7 @@ import Show from "./Show.js";
 import Form from "./Form.js";
 import Status from "./Status.js";
 import Confirm from "./Confirm.js";
+import Error from "./Error.js";
 
 export default function Appointment(props) {
   const {time, interview, interviewers, id, bookInterview, cancelInterview} = props
@@ -18,7 +19,8 @@ export default function Appointment(props) {
   const SAVING = "SAVING"
   const DELETING = "DELETING"
   const CONFIRM = "CONFIRM"
-  const EDIT = "EDIT"
+  const EDIT = "EDIT";
+  const ERROR = "ERROR";
 
   const {transition, back, mode} = useVisualMode(
     interview ? SHOW : EMPTY
@@ -32,6 +34,7 @@ export default function Appointment(props) {
     transition(SAVING)
     bookInterview(id, interview)
       .then(success => transition(SHOW))
+      .catch(err => transition(ERROR, true))
   }
 
   function editTransition() {
@@ -44,10 +47,11 @@ export default function Appointment(props) {
   }
 
   function deleteInterview(name, interviewer) {
-    const interview = {};
-    transition(DELETING)
-    cancelInterview(id, interview)
+
+    transition(DELETING, true)
+    cancelInterview(id)
       .then(success => transition(EMPTY))
+      .catch(err => transition(ERROR, true))
   }
 
   return (
@@ -75,6 +79,10 @@ export default function Appointment(props) {
         message="Are you sure you want to delete?" 
         onCancel={back}
         onConfirm={deleteInterview}
+      />}
+      {mode === ERROR && <Error 
+        message="Whoops. Something went wrong. Try again." 
+        onClose={back}
       />}
     </article>
   )
