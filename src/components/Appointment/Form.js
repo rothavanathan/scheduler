@@ -6,7 +6,7 @@ import Button from "../Button.js";
 
 export default function Form(props) {
   
-  const {interviewers, onSave, onCancel, bookInterview,} = props;
+  const {interviewers, onSave, onCancel} = props;
 
   // console.log(`onChange is: `, setInterviewer)
   const [name, setName] = useState(props.name || "");
@@ -26,6 +26,8 @@ export default function Form(props) {
     event.preventDefault()
     console.log(`form was submitted`)
   }
+
+
 
   return (
     <main className="appointment__card appointment__card--create">
