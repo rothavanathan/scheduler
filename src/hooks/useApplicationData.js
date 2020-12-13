@@ -65,6 +65,16 @@ export default function useApplicationData(){
         const {appointments} = action;
         return {...state, appointments}
       }
+
+      case "DECREMENT_SPOTS": {
+        const {days} = action;
+        return {...state, days}
+      }
+      
+      case "INCREMENT_SPOTS": {
+        const {days} = action;
+        return {...state, days}
+      }
       
       
       default: {
@@ -117,7 +127,14 @@ export default function useApplicationData(){
       };
       if (changeSpots) {
         const dayIndex = getDayIndexFromAppointmentId(id);
-        state.days[dayIndex].spots--;
+        const newDay = {...state.days[dayIndex], spots: state.days[dayIndex].spots - 1}
+        const newDays = state.days.map((day, index) => {
+          return index === dayIndex ? newDay : state.days[index]
+        })
+        dispatch({
+          type: "DECREMENT_SPOTS",
+          days: newDays
+        })
       }
       dispatch({
         type: "BOOK_INTERVIEW",
@@ -142,7 +159,14 @@ export default function useApplicationData(){
         [id]: appointment
       };
       //update spots value for day that contained appointment
-      state.days[dayIndex].spots++;
+      const newDay = {...state.days[dayIndex], spots: state.days[dayIndex].spots + 1}
+      const newDays = state.days.map((day, index) => {
+          return index === dayIndex ? newDay : state.days[index]
+      })
+      dispatch({
+        type: "DECREMENT_SPOTS",
+        days: newDays
+      })
       dispatch({
         type: "CANCEL_INTERVIEW",
         appointments
