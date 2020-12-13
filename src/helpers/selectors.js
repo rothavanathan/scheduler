@@ -26,11 +26,8 @@ export function getInterviewersForDay(state, day){
   const dailyInterviewersIds = [];
   for (let dayData of state.days) {
     if (dayData.name === day) {
-      console.log(`dayData is:`, dayData);
       //store the interviewers id numbers from the days interviewer array
       dailyInterviewersIds.push(...dayData.interviewers)
-      console.log(`dailyInterviewersIds array for ${day} is:`, dailyInterviewersIds)
-
     }
   }
   //if the day's interviewer array is empty return empty array
@@ -46,13 +43,10 @@ export function getInterviewersForDay(state, day){
       result.push(state.interviewers[id]);
     }
   }
-  console.log(`result is:`, result)
   return result;
 }
 
 export function getInterview(state, interview){
-  
-  console.log(`interview is: `, interview)
   if (!interview) {
     return null;
   }

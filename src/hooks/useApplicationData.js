@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
+import { getAppointmentsForDay } from "helpers/selectors";
 
 export default function useApplicationData(){
   const [state, setState] = useState({
@@ -60,11 +61,13 @@ export default function useApplicationData(){
     })
   }, [])
 
+  function getDayIndexFromAppointmentId(appointmentId) {
+    const targetDay = state.days.find(day => day.appointments.includes(appointmentId))
+    const dayIndex = targetDay.id - 1
+    return dayIndex;
+  }
 
- 
-
-
-  function bookInterview(id, interview) {
+  function bookInterview(id, interview, changeSpots = false) {
     return axios({
           method: "PUT",
           url: `/api/appointments/${id}`,
@@ -78,16 +81,26 @@ export default function useApplicationData(){
           ...state.appointments,
           [id]: appointment
         };
-        setState(prev => ({...prev, appointments}));
+        if (changeSpots) {
+          const dayIndex = getDayIndexFromAppointmentId(id);
+          state.days[dayIndex].spots--;
+        }
+        setState(prev => ({
+          ...prev, 
+          appointments
+        }))
       })
   };
 
   function cancelInterview(id) {
+    //grab day index before you delete appointment
+    const dayIndex = getDayIndexFromAppointmentId(id);
     return axios({
         method: "DELETE",
         url: `/api/appointments/${id}`,
       })
       .then(res => {
+        // console.log(`res in cancelInterview is `, res)
         const appointment = {
           ...state.appointments[id],
           interview: null
@@ -96,12 +109,20 @@ export default function useApplicationData(){
           ...state.appointments,
           [id]: appointment
         };
-        setState(prev => ({...prev, appointments}));
+        //update spots value for day that contained appointment
+        state.days[dayIndex].spots++;
+        setState(prev => ({
+          ...prev, 
+          appointments
+        }))
       })
   };
 
+
+
   return {
     state,
+    setState,
     setDay,
     bookInterview,
     cancelInterview

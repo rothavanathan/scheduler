@@ -6,7 +6,7 @@ import Button from "../Button.js";
 
 export default function Form(props) {
   
-  const {interviewers, onSave, onCancel} = props;
+  const {interviewers, onSave, onCancel, changeSpots} = props;
 
   // console.log(`onChange is: `, setInterviewer)
   const [name, setName] = useState(props.name || "");
@@ -54,7 +54,7 @@ export default function Form(props) {
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button onClick={cancel} danger>Cancel</Button>
-          <Button onClick={() => onSave(name, interviewer)} confirm>Save</Button>
+          <Button onClick={() => onSave(name, interviewer, changeSpots)} confirm>Save</Button>
         </section>
       </section>
     </main>

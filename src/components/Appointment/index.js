@@ -26,13 +26,13 @@ export default function Appointment(props) {
     interview ? SHOW : EMPTY
   );
 
-  function save(name, interviewer) {
+  function save(name, interviewer, changeSpots) {
     const interview = {
       student: name,
       interviewer
     };
     transition(SAVING)
-    bookInterview(id, interview)
+    bookInterview(id, interview, changeSpots)
       .then(success => transition(SHOW))
       .catch(err => transition(ERROR, true))
   }
@@ -68,8 +68,8 @@ export default function Appointment(props) {
       onEdit={editTransition}
       /> )}
 
-      {mode === CREATE && <Form onCancel={back} onSave={save} interviewers={interviewers}></Form>}
-      {mode === EDIT && <Form onCancel={back} onSave={save} interviewers={interviewers} name={interview.student} interviewer={interview.interviewer.id}></Form>}
+      {mode === CREATE && <Form onCancel={back} onSave={save} interviewers={interviewers} changeSpots={true}></Form>}
+      {mode === EDIT && <Form onCancel={back} onSave={save} interviewers={interviewers} name={interview.student} interviewer={interview.interviewer.id} changeSpots={false}></Form>}
 
       {mode === SAVING && <Status message="Saving..."/>}
       {mode === DELETING && <Status message="Deleting..."/>}

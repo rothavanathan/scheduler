@@ -11,6 +11,7 @@ import useApplicationData from "../hooks/useApplicationData"
 export default function Application(props) {
   const {
     state,
+    setState,
     setDay,
     bookInterview,
     cancelInterview
@@ -19,10 +20,10 @@ export default function Application(props) {
 
   const dailyInterviewers = getInterviewersForDay(state, state.day);
 
-
+  
   const schedule = getAppointmentsForDay(state, state.day).map((appointment) => {
-    const interview = getInterview(state, appointment.interview);
-    console.log(`interview is: `, interview)
+  const interview = getInterview(state, appointment.interview);
+
 
     return <Appointment 
     key={appointment.id} 
@@ -51,6 +52,8 @@ export default function Application(props) {
           days={state.days}
           day={state.day}
           setDay={setDay}
+          state={state}
+          setState={setState}
         />
 
       </nav>
