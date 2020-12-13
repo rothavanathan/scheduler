@@ -1,19 +1,21 @@
-import {useState, useEffect} from "react";
+import {useReducer, useEffect} from "react";
 import axios from "axios";
-import { getAppointmentsForDay } from "helpers/selectors";
 
 export default function useApplicationData(){
-  const [state, setState] = useState({
+  const initialState = {
     day: "Monday",
     days: [],
     appointments: {},
     interviewers: {}
-  })
-  
-  const setDay = day => setState(prev => (
-      { ...prev, day }
-    )
-  );
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  function getDayIndexFromAppointmentId(appointmentId) {
+    const targetDay = state.days.find(day => day.appointments.includes(appointmentId))
+    const dayIndex = targetDay.id - 1
+    return dayIndex;
+  }
 
   const getDays = () => {
     return axios({
@@ -36,6 +38,42 @@ export default function useApplicationData(){
     })
   };
 
+  
+  function reducer(state, action) {
+    switch (action.type) {
+
+      case "INITIAL_DATA": {
+        const {days, interviewers, appointments} = action;
+        console.log(`days in initial_data reducer case is`, days)
+        return {...state,
+          days,
+          interviewers,
+          appointments
+        }
+      }
+
+      case "SET_DAY": {
+        return {...state, day: action.day};
+      }
+
+      case "CANCEL_INTERVIEW": {
+        const {appointments} = action;
+        return {...state, appointments}
+      }
+
+      case "BOOK_INTERVIEW": {
+        const {appointments} = action;
+        return {...state, appointments}
+      }
+      
+      
+      default: {
+        return new Error(
+          `Tried to reduce with unsupported action type: ${action.type}`
+        );
+      }
+    } 
+  }
 
   //promise all to get all resources
   useEffect(() => {
@@ -46,83 +84,76 @@ export default function useApplicationData(){
     ])
     .then(([days, interviewers, appointments]) => {
       console.log(days.data, interviewers.data, appointments.data)
-      setState(prev => {
-        return {
-          ...prev,
+      dispatch({
+          type: "INITIAL_DATA",
           days: days.data,
           interviewers: interviewers.data,
           appointments: appointments.data
-        }
-
-      })
+        })
     })
     .catch(err => {
       console.log(err)
     })
   }, [])
-
-  function getDayIndexFromAppointmentId(appointmentId) {
-    const targetDay = state.days.find(day => day.appointments.includes(appointmentId))
-    const dayIndex = targetDay.id - 1
-    return dayIndex;
+  
+  
+  const setDay = day => {
+    dispatch({type: "SET_DAY", day})
   }
 
   function bookInterview(id, interview, changeSpots = false) {
     return axios({
-          method: "PUT",
-          url: `/api/appointments/${id}`,
-          data: {interview}
-      }).then(res => {
-        const appointment = {
-          ...state.appointments[id],
-          interview: { ...interview }
-        };
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        };
-        if (changeSpots) {
-          const dayIndex = getDayIndexFromAppointmentId(id);
-          state.days[dayIndex].spots--;
-        }
-        setState(prev => ({
-          ...prev, 
-          appointments
-        }))
+      method: "PUT",
+      url: `/api/appointments/${id}`,
+      data: {interview}
+    }).then(() => {
+      const appointment = {
+        ...state.appointments[id],
+        interview: { ...interview }
+      };
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      };
+      if (changeSpots) {
+        const dayIndex = getDayIndexFromAppointmentId(id);
+        state.days[dayIndex].spots--;
+      }
+      dispatch({
+        type: "BOOK_INTERVIEW",
+        appointments
       })
+    })
   };
 
   function cancelInterview(id) {
-    //grab day index before you delete appointment
     const dayIndex = getDayIndexFromAppointmentId(id);
     return axios({
-        method: "DELETE",
-        url: `/api/appointments/${id}`,
+      method: "DELETE",
+      url: `/api/appointments/${id}`,
+    })
+    .then(() => {
+      const appointment = {
+        ...state.appointments[id],
+        interview: null
+      };
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      };
+      //update spots value for day that contained appointment
+      state.days[dayIndex].spots++;
+      dispatch({
+        type: "CANCEL_INTERVIEW",
+        appointments
       })
-      .then(res => {
-        // console.log(`res in cancelInterview is `, res)
-        const appointment = {
-          ...state.appointments[id],
-          interview: null
-        };
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        };
-        //update spots value for day that contained appointment
-        state.days[dayIndex].spots++;
-        setState(prev => ({
-          ...prev, 
-          appointments
-        }))
-      })
+    })
   };
 
 
 
   return {
     state,
-    setState,
     setDay,
     bookInterview,
     cancelInterview
