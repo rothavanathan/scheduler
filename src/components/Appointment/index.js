@@ -12,7 +12,7 @@ import Error from "./Error.js";
 
 
 export default function Appointment(props) {
-  const socket = new WebSocket("ws://localhost:8001");
+  
   const {time, interview, interviewers, id, bookInterview, cancelInterview} = props
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
@@ -23,14 +23,7 @@ export default function Appointment(props) {
   const EDIT = "EDIT";
   const ERROR = "ERROR";
 
-  // Connection opened
-socket.addEventListener('open', function (event) {
-  socket.send('ping');
-});
-// Listen for messages
-socket.addEventListener('message', function (event) {
-  console.log('Message from server ', event.data);
-});
+
 
   const {transition, back, mode} = useVisualMode(
     interview ? SHOW : EMPTY

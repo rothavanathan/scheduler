@@ -2,6 +2,8 @@ import {useReducer, useEffect} from "react";
 import axios from "axios";
 
 export default function useApplicationData(){
+  const socket = new WebSocket("ws://localhost:8001");
+
   const initialState = {
     day: "Monday",
     days: [],
@@ -87,6 +89,14 @@ export default function useApplicationData(){
 
   //promise all to get all resources
   useEffect(() => {
+      // Connection opened
+    socket.addEventListener('open', function (event) {
+      socket.send('ping');
+    });
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+      console.log('Message from server ', event.data);
+    });
     Promise.all([
       getDays(),
       getInterviewers(),
@@ -99,6 +109,8 @@ export default function useApplicationData(){
           interviewers: interviewers.data,
           appointments: appointments.data
         })
+      
+      
     })
     .catch(err => {
       console.log(err)
