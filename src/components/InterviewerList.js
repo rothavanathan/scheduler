@@ -1,9 +1,12 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 import "components/InterviewerList.scss";
 import InterviewerListItem from "./InterviewerListItem";
 
-export default function InterviewerList(props) {
+function InterviewerList(props) {
+
+
   const {interviewers, interviewer, setInterviewer} = props;
   
   // const switchInterviewer = () => {
@@ -32,4 +35,11 @@ export default function InterviewerList(props) {
 </section>
 
   )
-};  
+};
+
+InterviewerList.propTypes = {
+  interviewers: PropTypes.array.isRequired
+}
+
+
+export default InterviewerList;
