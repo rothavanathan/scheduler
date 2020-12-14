@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import useApplicationData from "../hooks/useApplicationData"
 import "components/Application.scss";
@@ -19,6 +19,30 @@ export default function Application(props) {
   } = useApplicationData();
 
   console.log(`state is`, state)
+
+
+
+  const socket = new WebSocket("ws://localhost:8001");
+
+  useEffect(()=>{
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+    socket.send('ping');
+  });
+  // Listen for messages
+  socket.addEventListener('message', function (event) {
+    console.log('Message from server ', JSON.parse(event.data));
+  });
+  return () => {
+    socket.removeEventListener('open', function (event) {
+      socket.send('ping');
+    });
+    socket.removeEventListener('message', function (event) {
+      console.log('removing scoket event listener');
+    });
+    socket.close()
+    }
+  }, [])
 
 
   const dailyInterviewers = getInterviewersForDay(state, state.day);  
