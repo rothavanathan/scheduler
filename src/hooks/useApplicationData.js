@@ -93,7 +93,6 @@ export default function useApplicationData(){
       getAppointments()
     ])
     .then(([days, interviewers, appointments]) => {
-      console.log(days.data, interviewers.data, appointments.data)
       dispatch({
           type: "INITIAL_DATA",
           days: days.data,
@@ -161,7 +160,7 @@ export default function useApplicationData(){
       //update spots value for day that contained appointment
       const newDay = {...state.days[dayIndex], spots: state.days[dayIndex].spots + 1}
       const newDays = state.days.map((day, index) => {
-          return index === dayIndex ? newDay : state.days[index]
+          return index === dayIndex ? newDay : day
       })
       dispatch({
         type: "DECREMENT_SPOTS",
