@@ -10,10 +10,10 @@ export default function DayList(props){
   const {days, setDay} = props
 
   return (
-    <ul>
+    <ul title="dayList">
       {days.map(day=> {
         return (
-        <DayListItem 
+        <DayListItem
           key={day.id}
           name={day.name} 
           spots={day.spots} 
