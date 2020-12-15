@@ -25,7 +25,6 @@ export default function Form(props) {
 
   const handleFormSubmit = (event) => {
     event.preventDefault()
-    console.log(`form was submitted`)
   }
 
   function validate(name, interviewer, changeSpots) {
@@ -33,7 +32,9 @@ export default function Form(props) {
       setError("Student name cannot be blank");
       return;
     }
-  
+    if (error) {
+      setError("");
+    }
     onSave(name, interviewer, changeSpots);
   }
   
@@ -56,7 +57,7 @@ export default function Form(props) {
               This must be a controlled component
             */
           />
-          <section className="appointment__validation">{error}</section>
+          {error && <section className="appointment__validation">{error}</section>}
 
           <InterviewerList 
           interviewers={interviewers}
