@@ -20,24 +20,15 @@ export default function useApplicationData(){
   }
 
   const getDays = () => {
-    return axios({
-      url: `/api/days`,
-      method: 'GET'
-    })
+    return axios.get(`/api/days`)
   };
 
   const getInterviewers = () => {
-    return axios({
-      url: `/api/interviewers`,
-      method: 'GET'
-    })
+    return axios.get(`/api/interviewers`)
   };
 
   const getAppointments = () => {
-    return axios({
-      url: `/api/appointments`,
-      method: 'GET'
-    })
+    return axios.get(`/api/appointments`)
   };
 
   
