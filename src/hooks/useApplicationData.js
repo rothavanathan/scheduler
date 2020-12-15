@@ -37,7 +37,6 @@ export default function useApplicationData(){
 
       case "INITIAL_DATA": {
         const {days, interviewers, appointments} = action;
-        console.log(`days in initial_data reducer case is`, days)
         return {...state,
           days,
           interviewers,
@@ -111,35 +110,33 @@ export default function useApplicationData(){
   }
 
   function bookInterview(id, interview, changeSpots = false) {
-    return axios({
-      method: "PUT",
-      url: `/api/appointments/${id}`,
-      data: {interview}
-    }).then(() => {
-      const appointment = {
-        ...state.appointments[id],
-        interview: { ...interview }
-      };
-      const appointments = {
-        ...state.appointments,
-        [id]: appointment
-      };
-      if (changeSpots) {
-        const dayIndex = getDayIndexFromAppointmentId(id);
-        const newDay = {...state.days[dayIndex], spots: state.days[dayIndex].spots - 1}
-        const newDays = state.days.map((day, index) => {
-          return index === dayIndex ? newDay : state.days[index]
-        })
+    return axios.put(`/api/appointments/${id}`, {interview, changeSpots})
+      .then(() => {
+        console.log(`after book interview put request`)
+        const appointment = {
+          ...state.appointments[id],
+          interview: { ...interview }
+        };
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment
+        };
+        if (changeSpots) {
+          const dayIndex = getDayIndexFromAppointmentId(id);
+          const newDay = {...state.days[dayIndex], spots: state.days[dayIndex].spots - 1}
+          const newDays = state.days.map((day, index) => {
+            return index === dayIndex ? newDay : state.days[index]
+          })
+          dispatch({
+            type: "DECREMENT_SPOTS",
+            days: newDays
+          })
+        }
         dispatch({
-          type: "DECREMENT_SPOTS",
-          days: newDays
+          type: "BOOK_INTERVIEW",
+          appointments
         })
-      }
-      dispatch({
-        type: "BOOK_INTERVIEW",
-        appointments
       })
-    })
   };
 
   function cancelInterview(id) {

@@ -82,5 +82,14 @@ export default {
         });
       }
     }
+  }),
+
+
+  put: jest.fn(() => {
+    return Promise.resolve({ 
+      statusText: "No Content",
+      status: 204
+    })
   })
+
 }

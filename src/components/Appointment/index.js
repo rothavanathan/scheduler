@@ -36,7 +36,10 @@ export default function Appointment(props) {
     };
     transition(SAVING)
     bookInterview(id, interview, changeSpots)
-      .then(success => transition(SHOW))
+      .then(success => {
+        console.log(`after book interview put request`)
+        transition(SHOW)
+      })
       .catch(err => transition(ERROR, true))
   }
 
@@ -57,7 +60,10 @@ export default function Appointment(props) {
   }
 
   return (
-    <article className="appointment">
+    <article 
+    className="appointment"
+    data-testid="appointment"
+    >
       <Header time={time} />
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)}/>}
 

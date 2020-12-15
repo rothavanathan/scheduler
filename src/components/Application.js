@@ -18,9 +18,7 @@ export default function Application(props) {
     cancelInterview
   } = useApplicationData();
 
-  console.log(`state is`, state)
-
-
+  // console.log(`state is`, state)
 
   const socket = new WebSocket("ws://localhost:8001");
 
