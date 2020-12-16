@@ -3,7 +3,6 @@ A React application that allows users to book and cancel interviews
 
 Built for the **Lighthouse Labs Web Development** bootcamp by **Romesh Thavanathan**.
 
-<img src="" width="40%">
 
 ![desktop app demo](./scheduler_app_demo.gif)  
 
