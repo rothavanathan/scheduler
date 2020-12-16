@@ -33,7 +33,7 @@ npm start
 npm test
 ```
 
-## Running Storybook Visual Testbed
+### Running Storybook Visual Testbed
 
 ```sh
 npm run storybook
