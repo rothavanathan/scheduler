@@ -12,23 +12,22 @@ Built for the **Lighthouse Labs Web Development** bootcamp by **Romesh Thavanath
   - Storybook
   - Jest
   - Cypress
-  - Webpack, Babel
   - Axios
-  - *WebSockets
+  - Webpack, Babel
 
 ---
 
-## Setup
+### Setup
 
 Install dependencies with `npm install`.
 
-## Running Webpack Development Server
+### Running Webpack Development Server
 
 ```sh
 npm start
 ```
 
-## Running Jest Test Framework
+### Running Jest Test Framework
 
 ```sh
 npm test
