@@ -58,12 +58,7 @@ export default function useApplicationData(){
         return {...state, appointments}
       }
 
-      case "DECREMENT_SPOTS": {
-        const {days} = action;
-        return {...state, days}
-      }
-      
-      case "INCREMENT_SPOTS": {
+      case "CHANGE_SPOTS": {
         const {days} = action;
         return {...state, days}
       }
@@ -102,33 +97,43 @@ export default function useApplicationData(){
 
   }, [])
 
-
-  
-  
   const setDay = day => {
     dispatch({type: "SET_DAY", day})
+  }
+
+  //construct and return new state.appointments object when updating appointments
+  const newStateAppointments = (id, interview = null) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    return appointments
+  }
+
+  //constructs and returns new state.days object when changingSpots
+  const newStateDays = (dayIndex, increment = true) => {
+    const newSpots = increment ? state.days[dayIndex].spots + 1 : state.days[dayIndex].spots - 1;
+    const newDay = {...state.days[dayIndex], spots: newSpots}
+    const newDays = state.days.map((day, index) => {
+      return index === dayIndex ? newDay : state.days[index]
+    })
+    return newDays
   }
 
   function bookInterview(id, interview, changeSpots = false) {
     return axios.put(`/api/appointments/${id}`, {interview, changeSpots})
       .then(() => {
-        console.log(`after book interview put request`)
-        const appointment = {
-          ...state.appointments[id],
-          interview: { ...interview }
-        };
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        };
+        
+        const appointments = newStateAppointments(id, interview);
         if (changeSpots) {
           const dayIndex = getDayIndexFromAppointmentId(id);
-          const newDay = {...state.days[dayIndex], spots: state.days[dayIndex].spots - 1}
-          const newDays = state.days.map((day, index) => {
-            return index === dayIndex ? newDay : state.days[index]
-          })
+          const newDays = newStateDays(dayIndex, false);
           dispatch({
-            type: "DECREMENT_SPOTS",
+            type: "CHANGE_SPOTS",
             days: newDays
           })
         }
@@ -143,21 +148,11 @@ export default function useApplicationData(){
     const dayIndex = getDayIndexFromAppointmentId(id);
     return axios.delete(`/api/appointments/${id}`)
     .then(() => {
-      const appointment = {
-        ...state.appointments[id],
-        interview: null
-      };
-      const appointments = {
-        ...state.appointments,
-        [id]: appointment
-      };
+      const appointments = newStateAppointments(id);
       //update spots value for day that contained appointment
-      const newDay = {...state.days[dayIndex], spots: state.days[dayIndex].spots + 1}
-      const newDays = state.days.map((day, index) => {
-          return index === dayIndex ? newDay : day
-      })
+      const newDays = newStateDays(dayIndex, true);
       dispatch({
-        type: "DECREMENT_SPOTS",
+        type: "CHANGE_SPOTS",
         days: newDays
       })
       dispatch({
