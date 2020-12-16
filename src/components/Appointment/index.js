@@ -21,7 +21,8 @@ export default function Appointment(props) {
   const DELETING = "DELETING"
   const CONFIRM = "CONFIRM"
   const EDIT = "EDIT";
-  const ERROR = "ERROR";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
 
 
 
@@ -40,7 +41,7 @@ export default function Appointment(props) {
         console.log(`after book interview put request`)
         transition(SHOW)
       })
-      .catch(err => transition(ERROR, true))
+      .catch(err => transition(ERROR_SAVE, true))
   }
 
   function editTransition() {
@@ -56,7 +57,7 @@ export default function Appointment(props) {
     transition(DELETING, true)
     cancelInterview(id)
       .then(() => transition(EMPTY))
-      .catch(() => transition(ERROR, true))
+      .catch(() => transition(ERROR_DELETE, true))
   }
 
   return (
@@ -87,8 +88,13 @@ export default function Appointment(props) {
         onCancel={back}
         onConfirm={deleteInterview}
       />}
-      {mode === ERROR && <Error 
-        message="Whoops. Something went wrong. Try again." 
+
+      {mode === ERROR_SAVE && <Error 
+        message="Whoops. Something went wrong with saving the interview. Try again." 
+        onClose={back}
+      />}
+      {mode === ERROR_DELETE && <Error 
+        message="Whoops. Something went wrong with deleting the interview. Try again." 
         onClose={back}
       />}
     </article>

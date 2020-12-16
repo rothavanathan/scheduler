@@ -141,10 +141,7 @@ export default function useApplicationData(){
 
   function cancelInterview(id) {
     const dayIndex = getDayIndexFromAppointmentId(id);
-    return axios({
-      method: "DELETE",
-      url: `/api/appointments/${id}`,
-    })
+    return axios.delete(`/api/appointments/${id}`)
     .then(() => {
       const appointment = {
         ...state.appointments[id],
