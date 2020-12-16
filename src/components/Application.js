@@ -18,46 +18,22 @@ export default function Application(props) {
     cancelInterview
   } = useApplicationData();
 
-  // console.log(`state is`, state)
+  const dailyInterviewers = getInterviewersForDay(state, state.day); 
 
-  const socket = new WebSocket("ws://localhost:8001");
-
-  useEffect(()=>{
-    // Connection opened
-    socket.addEventListener('open', function (event) {
-    socket.send('ping');
-  });
-  // Listen for messages
-  socket.addEventListener('message', function (event) {
-    console.log('Message from server ', JSON.parse(event.data));
-  });
-  return () => {
-    socket.removeEventListener('open', function (event) {
-      socket.send('ping');
-    });
-    socket.removeEventListener('message', function (event) {
-      console.log('removing scoket event listener');
-    });
-    socket.close()
-    }
-  }, [])
-
-
-  const dailyInterviewers = getInterviewersForDay(state, state.day);  
+  //create appointment schedule for state.Day
   const schedule = getAppointmentsForDay(state, state.day).map((appointment) => {
-  const interview = getInterview(state, appointment.interview);
-
-
+    const interview = getInterview(state, appointment.interview);
     return <Appointment 
-    key={appointment.id} 
-    id={appointment.id}
-    time={appointment.time}
-    interview={interview}
-    interviewers={dailyInterviewers}
-    bookInterview={bookInterview}
-    cancelInterview={cancelInterview}
+      key={appointment.id} 
+      id={appointment.id}
+      time={appointment.time}
+      interview={interview}
+      interviewers={dailyInterviewers}
+      bookInterview={bookInterview}
+      cancelInterview={cancelInterview}
     />
   })
+
   //tag on extra header to complete the wrapping of appointment blocks with time headers
   schedule.push(<Appointment key="last" time="5pm" />)
 
