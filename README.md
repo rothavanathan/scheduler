@@ -8,15 +8,15 @@ Built for the **Lighthouse Labs Web Development** bootcamp by **Romesh Thavanath
 
 ## Stack and Techonologies used
 
-  -React
-  -Storybook
-  -Jest
-  -Cypress
-  -Webpack, Babel
-  -Axios
-  *WebSockets
+  - React
+  - Storybook
+  - Jest
+  - Cypress
+  - Webpack, Babel
+  - Axios
+  - *WebSockets
 
-
+---
 
 ## Setup
 
