@@ -4,11 +4,9 @@ export function getAppointmentsForDay(state, day){
   const dailyAppointmentIds = [];
   for (let dayData of state.days) {
     if (dayData.name === day) {
-      console.log(dayData);
       dailyAppointmentIds.push(...dayData.appointments)
     }
   }
-  console.log(dailyAppointmentIds)
   if (!dailyAppointmentIds) {
     return [];
   }

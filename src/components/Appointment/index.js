@@ -37,11 +37,10 @@ export default function Appointment(props) {
     };
     transition(SAVING)
     bookInterview(id, interview, changeSpots)
-      .then(success => {
-        console.log(`after book interview put request`)
+      .then(() => {
         transition(SHOW)
       })
-      .catch(err => transition(ERROR_SAVE, true))
+      .catch(() => transition(ERROR_SAVE, true))
   }
 
   function editTransition() {
