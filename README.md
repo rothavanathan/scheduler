@@ -8,7 +8,7 @@ Built for the **Lighthouse Labs Web Development** bootcamp by **Romesh Thavanath
 
 ## Stack and Techonologies used
 
-  - React
+  - React (hooks/ functional components)
   - Storybook
   - Jest
   - Cypress
