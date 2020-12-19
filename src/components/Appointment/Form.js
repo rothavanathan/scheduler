@@ -32,6 +32,10 @@ export default function Form(props) {
       setError("Student name cannot be blank");
       return;
     }
+    if (!interviewer) {
+      setError("Please select an interviewer");
+      return;
+    }
     if (error) {
       setError("");
     }
@@ -59,12 +63,13 @@ export default function Form(props) {
           />
           {error && <section className="appointment__validation">{error}</section>}
 
-          <InterviewerList 
+
+        </form>
+        <InterviewerList 
           interviewers={interviewers}
           interviewer={interviewer}
           setInterviewer={setInterviewer}
           />
-        </form>
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">

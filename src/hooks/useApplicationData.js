@@ -29,11 +29,6 @@ export default function useApplicationData(){
         return {...state, day: action.day};
       }
 
-      case "CANCEL_INTERVIEW": {
-        const {appointments} = action;
-        return {...state, appointments}
-      }
-
       case "BOOK_INTERVIEW": {
         const {appointments} = action;
         return {...state, appointments}
@@ -124,9 +119,10 @@ export default function useApplicationData(){
 
   //construct and return new state.appointments object when updating appointments
   const newStateAppointments = (id, interview = null) => {
+    
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview }
+      interview: interview ? { ...interview }: null
     };
     const appointments = {
       ...state.appointments,
@@ -136,8 +132,8 @@ export default function useApplicationData(){
   }
 
   //constructs and returns new state.days object when changingSpots
-  const newStateDays = (dayIndex, increment = true) => {
-    const newSpots = increment ? state.days[dayIndex].spots + 1 : state.days[dayIndex].spots - 1;
+  const newStateDays = (dayIndex, increment = 0) => {
+    const newSpots = state.days[dayIndex].spots + increment;
     const newDay = {...state.days[dayIndex], spots: newSpots}
     const newDays = state.days.map((day, index) => {
       return index === dayIndex ? newDay : state.days[index]
@@ -153,7 +149,7 @@ export default function useApplicationData(){
         //check if we're updating or creating
         if (changeSpots) {
           const dayIndex = getDayIndexFromAppointmentId(id);
-          const newDays = newStateDays(dayIndex, false);
+          const newDays = newStateDays(dayIndex, -1);
           dispatch({
             type: "CHANGE_SPOTS",
             days: newDays
@@ -173,13 +169,13 @@ export default function useApplicationData(){
     .then(() => {
       const appointments = newStateAppointments(id);
       //update spots value for day that contained appointment, increment spots true
-      const newDays = newStateDays(dayIndex, true);
+      const newDays = newStateDays(dayIndex, 1);
       dispatch({
         type: "CHANGE_SPOTS",
         days: newDays
       })
       dispatch({
-        type: "CANCEL_INTERVIEW",
+        type: "BOOK_INTERVIEW",
         appointments
       })
     })
